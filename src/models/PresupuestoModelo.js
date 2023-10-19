@@ -10,7 +10,7 @@ const presupuestoSchema = Schema({
     required: true,
   },
   Precio: {
-    type: String,
+    type: Number,
     required: true,
   },
   PresupuestoCodigo: {
