@@ -7,9 +7,6 @@ const {
 const routerPresupuestos = express.Router();
 
 routerPresupuestos.post("/crearPresupuesto", crearPresupuesto);
-routerPresupuestos.delete(
-  "/deletePres/:clientId/:presupuestoCodigo",
-  DeletePres
-);
+routerPresupuestos.delete("/deletePres/:clientId/:presupuestoId", DeletePres);
 
 module.exports = routerPresupuestos;
