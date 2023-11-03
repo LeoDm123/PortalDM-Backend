@@ -66,17 +66,19 @@ const DeletePres = async (req, res) => {
       console.log("Cliente no encontrado");
       return res.status(404).json({ message: "Cliente no encontrado" });
     }
-    const updatedClient = await Clientes.findOneAndUpdate(
-      { _id: clientId },
-      { $pull: { Presupuestos: { _id: presupuestoId } } },
-      { new: true }
-    );
-    console.log("Updated Client:", updatedClient);
 
-    if (!updatedClient) {
+    const presupuestoIndex = client.Presupuestos.findIndex(
+      (presupuesto) => presupuesto._id.toString() === presupuestoId
+    );
+
+    if (presupuestoIndex === -1) {
       console.log("Presupuesto no encontrado");
       return res.status(404).json({ message: "Presupuesto no encontrado" });
     }
+
+    client.Presupuestos.splice(presupuestoIndex, 1);
+
+    await client.save();
 
     return res
       .status(200)

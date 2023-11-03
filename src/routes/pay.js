@@ -1,8 +1,9 @@
 const express = require("express");
-const { crearPago } = require("../controllers/pay.controllers");
+const { crearPago, DeletePago } = require("../controllers/pay.controllers");
 
-const routerAuth = express.Router();
+const routerPay = express.Router();
 
-routerAuth.post("/crearPago", crearPago);
+routerPay.post("/crearPago", crearPago);
+routerPay.delete("/deletePago/:clientId/:presupuestoId/:pagoId", DeletePago);
 
-module.exports = routerAuth;
+module.exports = routerPay;

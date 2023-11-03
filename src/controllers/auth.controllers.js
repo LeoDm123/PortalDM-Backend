@@ -33,17 +33,14 @@ const loginUsuario = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    //validacion si existe el usuario
     let usuario = await Usuarios.findOne({ email });
 
-    //si el usuario no existe
     if (!usuario) {
       return res.json({
         msg: "El Email o la contraseña es incorrectas",
       });
     }
 
-    //confirmar contraseñas
     const validarPassword = bcrypt.compareSync(password, usuario.password);
 
     if (!validarPassword) {

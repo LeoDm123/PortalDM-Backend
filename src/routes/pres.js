@@ -2,6 +2,7 @@ const express = require("express");
 const {
   crearPresupuesto,
   DeletePres,
+  obtenerPres,
 } = require("../controllers/pres.controllers");
 
 const routerPresupuestos = express.Router();
