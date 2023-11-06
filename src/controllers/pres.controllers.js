@@ -89,7 +89,48 @@ const DeletePres = async (req, res) => {
   }
 };
 
+const EditPresupuesto = async (req, res) => {
+  try {
+    const clientId = req.params.clientId;
+    const presupuestoId = req.params.presupuestoId;
+    const updatedPresData = req.body;
+    const estadoPres = updatedPresData.Estado;
+
+    const client = await Clientes.findById(clientId);
+
+    if (!client) {
+      return res.status(404).json({ error: "Cliente no encontrado" });
+    }
+
+    const presupuesto = client.Presupuestos.find(
+      (presupuesto) => presupuesto._id.toString() === presupuestoId
+    );
+
+    if (!presupuesto) {
+      console.log("Presupuesto no encontrado");
+      return res.status(404).json({ message: "Presupuesto no encontrado" });
+    }
+
+    const index = client.Presupuestos.findIndex(
+      (p) => p._id.toString() === presupuestoId
+    );
+
+    const presupuestoClone = { ...presupuesto };
+    presupuestoClone.Estado = estadoPres;
+
+    client.Presupuestos[index] = presupuestoClone;
+
+    await client.save();
+
+    res.json(presupuesto);
+  } catch (error) {
+    console.error("Error al editar el presupuesto:", error);
+    res.status(500).json({ error: "Error al editar el presupuesto" });
+  }
+};
+
 module.exports = {
   crearPresupuesto,
   DeletePres,
+  EditPresupuesto,
 };

@@ -1,7 +1,5 @@
 const Clientes = require("../models/clienteModelo");
 
-//Cmentario
-
 const crearCliente = async (req, res) => {
   const {
     ClientName,
@@ -18,7 +16,10 @@ const crearCliente = async (req, res) => {
 
   try {
     let cliente = await Clientes.findOne({
-      $or: [{ ClientDNI }, { ClientCUIT }],
+      $or: [
+        { $and: [{ ClientDNI: { $ne: "" } }, { ClientDNI }] },
+        { $and: [{ ClientCUIT: { $ne: "" } }, { ClientCUIT }] },
+      ],
     });
 
     if (cliente) {
