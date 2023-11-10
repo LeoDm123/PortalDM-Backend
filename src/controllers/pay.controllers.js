@@ -82,25 +82,29 @@ const DeletePago = async (req, res) => {
       (pres) => pres._id.toString() === presupuestoId
     );
 
+    console.log("ANTES", presupuesto);
+
     if (!presupuesto) {
       console.log("Presupuesto no encontrado");
       return res.status(404).json({ message: "Presupuesto no encontrado" });
     }
 
-    const pagoIndex = presupuesto.Pagos.findIndex(
-      (pago) => pago._id.toString() === pagoId
+    presupuesto.Pagos = presupuesto.Pagos.filter(
+      (pago) => pago._id.toString() !== pagoId
     );
 
-    console.log(pagoIndex);
+    console.log("");
+    console.log("DESPUES", presupuesto);
 
-    if (pagoIndex === -1) {
-      console.log("Pago no encontrado");
-      return res.status(404).json({ message: "Pago no encontrado" });
+    const updatedCliente = await Clientes.findOneAndUpdate(
+      { _id: clientId },
+      { $set: { Presupuestos: client.Presupuestos } },
+      { new: true }
+    );
+
+    if (!updatedCliente) {
+      return res.status(404).json({ msg: "Error al actualizar el cliente" });
     }
-
-    presupuesto.Pagos.splice(pagoIndex, 1);
-
-    await client.save();
 
     return res.status(200).json({ message: "Pago eliminado correctamente" });
   } catch (error) {
