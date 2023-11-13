@@ -1,28 +1,37 @@
-const Material = require("../models/materialModelo");
+const Materiales = require("../models/materialModelo");
 
 const crearMaterial = async (req, res) => {
-  const { Detalle, Categoria, Ancho, Alto, Largo, Espesor, Costo } = req.body;
+  const {
+    Codigo,
+    Detalle,
+    Categoria,
+    Unidad,
+    Ancho,
+    Alto,
+    Largo,
+    Espesor,
+    Costo,
+    StockSeguridad,
+    StockInicial,
+  } = req.body;
 
   try {
-    let cliente = await Clientes.findOne({
-      $or: [
-        { $and: [{ ClientDNI: { $ne: "" } }, { ClientDNI }] },
-        { $and: [{ ClientCUIT: { $ne: "" } }, { ClientCUIT }] },
-      ],
+    let material = await Materiales.findOne({
+      Codigo,
     });
 
-    if (cliente) {
+    if (material) {
       return res.json({
-        msg: "El DNI o CUIT que intenta registrar ya se encuentra registrado",
+        msg: "Material ya se encuentra registrado",
       });
     }
 
-    cliente = new Clientes(req.body);
+    material = new Materiales(req.body);
 
-    await cliente.save();
+    await material.save();
 
     res.json({
-      msg: "Cliente registrado",
+      msg: "Material registrado",
     });
   } catch (error) {
     console.log(error);
