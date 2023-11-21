@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const materialchema = Schema({
+const materialSchema = Schema({
   Codigo: {
     type: String,
     required: true,
@@ -15,35 +15,27 @@ const materialchema = Schema({
   },
   Unidad: {
     type: String,
-    required: true,
   },
   Ancho: {
     type: Number,
-    required: true,
   },
   Alto: {
     type: Number,
-    required: true,
   },
   Largo: {
     type: Number,
-    required: true,
   },
   Espesor: {
     type: Number,
-    required: true,
   },
   Costo: {
     type: Number,
-    required: true,
   },
   StockSeguridad: {
     type: Number,
-    required: true,
   },
   StockInicial: {
     type: Number,
-    required: true,
   },
   Proveedor: {
     type: String,
@@ -51,4 +43,4 @@ const materialchema = Schema({
   },
 });
 
-module.exports = model("Materiales", materialchema);
+module.exports = model("Materiales", materialSchema);

@@ -15,6 +15,7 @@ app.use("/auth", require("./src/routes/auth"));
 app.use("/clients", require("./src/routes/clients"));
 app.use("/pres", require("./src/routes/pres"));
 app.use("/pay", require("./src/routes/pay"));
+app.use("/pedido", require("./src/routes/pedido"));
 app.use("/mats", require("./src/routes/mats"));
 
 app.listen(process.env.PORT, () => {
