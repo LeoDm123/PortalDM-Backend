@@ -34,7 +34,7 @@ const materialSchema = Schema({
   StockSeguridad: {
     type: Number,
   },
-  StockInicial: {
+  Stock: {
     type: Number,
   },
   Proveedor: {

@@ -12,7 +12,7 @@ const crearMaterial = async (req, res) => {
     Espesor,
     Costo,
     StockSeguridad,
-    StockInicial,
+    Stock,
     Proveedor,
   } = req.body;
 

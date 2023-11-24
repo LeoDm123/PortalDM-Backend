@@ -1,4 +1,5 @@
-const Pedidos = require("../models/pedidoModelo");
+const Pedidos = require("../models/pedidoPerfilesModelo");
+const Materiales = require("../models/materialModelo");
 
 const crearPedido = async (req, res) => {
   const { Obra, Fecha, NroPedido, OrdenCompra, Materiales } = req.body;
@@ -99,10 +100,31 @@ const recibirPedido = async (req, res) => {
         .json({ message: "Material no encontrado en el pedido" });
     }
 
-    materialEncontrado.recepciones = materialEncontrado.recepciones || [];
-    materialEncontrado.recepciones.push(req.body);
+    const materialBD = await Materiales.findOne({ Codigo: codigoMat });
 
-    await pedido.save();
+    if (!materialBD) {
+      console.log("Material no encontrado en la base de datos");
+      return res
+        .status(404)
+        .json({ message: "Material no encontrado en la base de datos" });
+    }
+
+    const updatedStock = (materialBD.Stock += CantRecibida);
+
+    const updatedMaterial = await Materiales.findOneAndUpdate(
+      { Codigo: codigoMat },
+      { $set: { Stock: updatedStock } },
+      { new: true }
+    );
+
+    materialEncontrado.Recepciones = materialEncontrado.Recepciones || [];
+    materialEncontrado.Recepciones.push(req.body);
+
+    const updatedPedido = await Pedidos.findOneAndUpdate(
+      { _id: pedidoId },
+      { $set: { Materiales: pedido.Materiales } },
+      { new: true }
+    );
 
     return res.status(200).json(materialEncontrado);
   } catch (error) {

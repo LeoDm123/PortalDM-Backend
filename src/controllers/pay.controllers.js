@@ -82,8 +82,6 @@ const DeletePago = async (req, res) => {
       (pres) => pres._id.toString() === presupuestoId
     );
 
-    console.log("ANTES", presupuesto);
-
     if (!presupuesto) {
       console.log("Presupuesto no encontrado");
       return res.status(404).json({ message: "Presupuesto no encontrado" });
@@ -92,9 +90,6 @@ const DeletePago = async (req, res) => {
     presupuesto.Pagos = presupuesto.Pagos.filter(
       (pago) => pago._id.toString() !== pagoId
     );
-
-    console.log("");
-    console.log("DESPUES", presupuesto);
 
     const updatedCliente = await Clientes.findOneAndUpdate(
       { _id: clientId },
