@@ -2,7 +2,7 @@ const Pedidos = require("../models/pedidoVidriosModelo");
 const Materiales = require("../models/materialModelo");
 
 const crearPedido = async (req, res) => {
-  const { Obra, Fecha, NroPedido, Vidrios } = req.body;
+  const { Cliente, Obra, Fecha, NroPedido, Vidrios } = req.body;
 
   try {
     let pedido = await Pedidos.findOne({
@@ -84,6 +84,8 @@ const recibirPedido = async (req, res) => {
     const { CantRecibida, FechaRecep, nroPedido, NroRemito, RemitoLog } =
       req.body;
 
+    console.log("REQ:", req.body);
+
     const pedido = await Pedidos.findOne({ _id: pedidoId });
 
     if (!pedido) {
@@ -91,7 +93,7 @@ const recibirPedido = async (req, res) => {
       return res.status(404).json({ message: "Pedido no encontrado" });
     }
 
-    const materialEncontrado = pedido.Materiales.find(
+    const materialEncontrado = pedido.Vidrios.find(
       (material) => material.Codigo === codigoMat
     );
 
@@ -102,42 +104,12 @@ const recibirPedido = async (req, res) => {
         .json({ message: "Material no encontrado en el pedido" });
     }
 
-    const materialBD = await Materiales.findOne({ Codigo: codigoMat });
-
-    if (!materialBD) {
-      console.log("Material no encontrado en la base de datos");
-      return res
-        .status(404)
-        .json({ message: "Material no encontrado en la base de datos" });
-    }
-
-    const updatedStock = (materialBD.Stock += CantRecibida);
-
-    const updatedMaterial = await Materiales.findOneAndUpdate(
-      { Codigo: codigoMat },
-      { $set: { Stock: updatedStock } },
-      { new: true }
-    );
-
-    const MaterialLog = {
-      CantRecibida,
-      FechaRecep,
-      nroPedido,
-      RemitoLog,
-    };
-
-    const updatedMaterialLog = await Materiales.findOneAndUpdate(
-      { Codigo: codigoMat },
-      { $push: { InvLog: MaterialLog } },
-      { new: true }
-    );
-
     materialEncontrado.Recepciones = materialEncontrado.Recepciones || [];
     materialEncontrado.Recepciones.push(req.body);
 
     const updatedPedido = await Pedidos.findOneAndUpdate(
       { _id: pedidoId },
-      { $set: { Materiales: pedido.Materiales } },
+      { $set: { Vidrios: pedido.Vidrios } },
       { new: true }
     );
 
@@ -160,7 +132,7 @@ const obtenerMaterialPorCodigo = async (req, res) => {
       return res.status(404).json({ message: "Pedido no encontrado" });
     }
 
-    const materialEncontrado = pedido.Materiales.find(
+    const materialEncontrado = pedido.Vidrios.find(
       (material) => material.Codigo === codigoMat
     );
 
