@@ -14,7 +14,7 @@ routerPedidoPerfiles.post("/crearPedido", crearPedido);
 routerPedidoPerfiles.get("/obtenerPedidos", obtenerPedidos);
 routerPedidoPerfiles.delete("/deletePedido/:id", deletePedido);
 routerPedidoPerfiles.put("/recibirPedido/:pedidoId/:codigoMat", recibirPedido);
-routerPedidoPerfiles.get("/obtenerPedidoPorId/:id", obtenerPedidoPorId);
+routerPedidoPerfiles.get("/obtenerPedidoPorId/:pedidoId", obtenerPedidoPorId);
 routerPedidoPerfiles.get(
   "/obtenerMaterialPorCodigo/:pedidoId/:codigoMat",
   obtenerMaterialPorCodigo

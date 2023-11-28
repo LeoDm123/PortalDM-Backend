@@ -1,8 +1,8 @@
-const Pedidos = require("../models/pedidoHerrajesModelo");
+const Pedidos = require("../models/pedidoVidriosModelo");
 const Materiales = require("../models/materialModelo");
 
 const crearPedido = async (req, res) => {
-  const { Obra, Fecha, NroPedido, OrdenCompra, Materiales } = req.body;
+  const { Obra, Fecha, NroPedido, Vidrios } = req.body;
 
   try {
     let pedido = await Pedidos.findOne({
@@ -81,15 +81,8 @@ const recibirPedido = async (req, res) => {
   try {
     const pedidoId = req.params.pedidoId;
     const codigoMat = req.params.codigoMat;
-    const {
-      CantRecibida,
-      FechaRecep,
-      nroPedido,
-      NroRemito,
-      Unidad,
-      TipoMov,
-      RemitoLog,
-    } = req.body;
+    const { CantRecibida, FechaRecep, nroPedido, NroRemito, RemitoLog } =
+      req.body;
 
     const pedido = await Pedidos.findOne({ _id: pedidoId });
 
@@ -130,8 +123,6 @@ const recibirPedido = async (req, res) => {
       CantRecibida,
       FechaRecep,
       nroPedido,
-      Unidad,
-      TipoMov,
       RemitoLog,
     };
 

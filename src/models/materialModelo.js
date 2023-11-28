@@ -41,6 +41,9 @@ const materialSchema = Schema({
     type: String,
     required: true,
   },
+  InvLog: {
+    type: Array,
+  },
 });
 
 module.exports = model("Materiales", materialSchema);

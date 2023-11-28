@@ -62,8 +62,9 @@ const deletePedido = async (req, res) => {
 
 const obtenerPedidoPorId = async (req, res) => {
   try {
-    const pedidoId = req.params.id;
-    const pedido = await Pedidos.findById(pedidoId);
+    const pedidoId = req.params.pedidoId;
+
+    const pedido = await Pedidos.findOne({ _id: pedidoId });
 
     if (!pedido) {
       return res.status(404).json({ message: "Pedido no encontrado" });
@@ -80,7 +81,15 @@ const recibirPedido = async (req, res) => {
   try {
     const pedidoId = req.params.pedidoId;
     const codigoMat = req.params.codigoMat;
-    const { CantRecibida, FechaRecep, NroRemito } = req.body;
+    const {
+      CantRecibida,
+      FechaRecep,
+      nroPedido,
+      NroRemito,
+      Unidad,
+      TipoMov,
+      RemitoLog,
+    } = req.body;
 
     const pedido = await Pedidos.findOne({ _id: pedidoId });
 
@@ -114,6 +123,21 @@ const recibirPedido = async (req, res) => {
     const updatedMaterial = await Materiales.findOneAndUpdate(
       { Codigo: codigoMat },
       { $set: { Stock: updatedStock } },
+      { new: true }
+    );
+
+    const MaterialLog = {
+      CantRecibida,
+      FechaRecep,
+      nroPedido,
+      Unidad,
+      TipoMov,
+      RemitoLog,
+    };
+
+    const updatedMaterialLog = await Materiales.findOneAndUpdate(
+      { Codigo: codigoMat },
+      { $push: { InvLog: MaterialLog } },
       { new: true }
     );
 

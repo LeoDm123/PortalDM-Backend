@@ -17,7 +17,9 @@ app.use("/pres", require("./src/routes/pres"));
 app.use("/pay", require("./src/routes/pay"));
 app.use("/pedidoPerfiles", require("./src/routes/pedidoPerfiles"));
 app.use("/pedidoHerrajes", require("./src/routes/pedidoHerrajes"));
+app.use("/pedidoVidrios", require("./src/routes/pedidoVidrios"));
 app.use("/mats", require("./src/routes/mats"));
+app.use("/inv", require("./src/routes/inv"));
 
 app.listen(process.env.PORT, () => {
   console.log(`Servidor corriendo en el puerto ${process.env.PORT}`);
