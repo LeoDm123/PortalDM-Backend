@@ -57,7 +57,76 @@ const loginUsuario = async (req, res) => {
   }
 };
 
+const obtenerUsuarios = async (req, res) => {
+  try {
+    const usuarios = await Usuarios.find();
+
+    if (!usuarios) {
+      return res.status(404).json({ message: "Currency data not found" });
+    }
+
+    return res.status(200).json(usuarios);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const DeleteUsuario = async (req, res) => {
+  try {
+    const deletedUser = await Usuarios.findByIdAndDelete(req.params.id);
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const EditUsuario = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const updatedUserData = req.body;
+    console.log(updatedUserData);
+
+    const updatedUser = await Usuarios.findByIdAndUpdate(
+      userId,
+      updatedUserData,
+      { new: true }
+    );
+
+    res.json(updatedUser);
+  } catch (error) {
+    console.error("Error al editar el usuario:", error);
+    res.status(500).json({ error: "Error al editar el usuario" });
+  }
+};
+
+const obtenerUsuarioPorId = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await Usuario.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    return res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Error interno del servidor" });
+  }
+};
+
 module.exports = {
   crearUsuario,
   loginUsuario,
+  obtenerUsuarios,
+  DeleteUsuario,
+  EditUsuario,
+  obtenerUsuarioPorId,
 };

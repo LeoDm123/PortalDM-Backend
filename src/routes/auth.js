@@ -2,14 +2,19 @@ const express = require("express");
 const {
   crearUsuario,
   loginUsuario,
+  obtenerUsuarios,
+  DeleteUsuario,
+  EditUsuario,
+  obtenerUsuarioPorId,
 } = require("../controllers/auth.controllers");
 
-//va a ser el nombre del router que definamos
 const routerAuth = express.Router();
 
-//peticion get       Req = solicitud, va a estar esperando datos del FrontEnd
 routerAuth.post("/crearUsuario", crearUsuario);
 routerAuth.post("/login", loginUsuario);
+routerAuth.get("/obtenerUsuarios", obtenerUsuarios);
+routerAuth.delete("/deleteUsuario/:id", DeleteUsuario);
+routerAuth.put("/editUsuario/:id", EditUsuario);
+routerAuth.get("/obtenerUsuarioPorId/:id", obtenerUsuarioPorId);
 
-//module.exports es como vamos a exportar nuestros archivos
 module.exports = routerAuth;
