@@ -3,7 +3,7 @@ const Materiales = require("../models/materialModelo");
 const crearMaterial = async (req, res) => {
   const {
     Codigo,
-    Detalle,
+    Descripcion,
     Categoria,
     Unidad,
     Ancho,
@@ -116,10 +116,68 @@ const obtenerMatPorId = async (req, res) => {
   }
 };
 
+const retirarIngresarMaterial = async (req, res) => {
+  try {
+    const codigoMat = req.params.id;
+    const { Cantidad, TipoMov, Fecha, Unidad } = req.body;
+
+    const materialEncontrado = await Materiales.findOne({ _id: codigoMat });
+
+    if (!materialEncontrado) {
+      console.log("Material no encontrado en el pedido");
+      return res
+        .status(404)
+        .json({ message: "Material no encontrado en el pedido" });
+    }
+
+    let updatedStock;
+
+    if (TipoMov === "Ingreso") {
+      updatedStock = materialEncontrado.Stock + Cantidad;
+    } else if (TipoMov === "Egreso") {
+      if (materialEncontrado.Stock < Cantidad) {
+        console.log("Stock insuficiente para el egreso");
+        return res
+          .status(400)
+          .json({ message: "Stock insuficiente para el egreso" });
+      }
+      updatedStock = materialEncontrado.Stock - Cantidad;
+    } else {
+      console.log("Tipo de movimiento no válido");
+      return res.status(400).json({ message: "Tipo de movimiento no válido" });
+    }
+
+    const updatedMaterial = await Materiales.findOneAndUpdate(
+      { _id: codigoMat },
+      { $set: { Stock: updatedStock } },
+      { new: true }
+    );
+
+    const MaterialLog = {
+      CantRecibida: Cantidad,
+      FechaRecep: Fecha,
+      Unidad,
+      TipoMov,
+    };
+
+    const updatedMaterialLog = await Materiales.findOneAndUpdate(
+      { _id: codigoMat },
+      { $push: { InvLog: MaterialLog } },
+      { new: true }
+    );
+
+    res.json(updatedMaterial);
+  } catch (error) {
+    console.error("Error al editar el material:", error);
+    res.status(500).json({ error: "Error al editar el material" });
+  }
+};
+
 module.exports = {
   crearMaterial,
   obtenerMats,
   borrarMaterial,
   editMaterial,
   obtenerMatPorId,
+  retirarIngresarMaterial,
 };

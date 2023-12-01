@@ -9,7 +9,7 @@ const crearLog = async (req, res) => {
     TipoMov,
     Cantidad,
     Unidad,
-    Detalle,
+    Comentario,
   } = req.body;
 
   try {

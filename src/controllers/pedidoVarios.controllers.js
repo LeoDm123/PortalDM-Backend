@@ -1,8 +1,9 @@
-const Pedidos = require("../models/pedidoHerrajesModelo");
+const Pedidos = require("../models/pedidoVariosModelo");
 const Materiales = require("../models/materialModelo");
 
 const crearPedido = async (req, res) => {
-  const { Obra, Fecha, NroPedido, OrdenCompra, Estado, Materiales } = req.body;
+  const { Cliente, Obra, Fecha, NroPedido, Proveedor, Estado, Materiales } =
+    req.body;
 
   try {
     let pedido = await Pedidos.findOne({

@@ -15,7 +15,6 @@ const InventarioLogSchema = Schema({
   },
   NroPedido: {
     type: String,
-    required: true,
   },
   TipoMov: {
     type: String,
@@ -29,7 +28,7 @@ const InventarioLogSchema = Schema({
     type: String,
     required: true,
   },
-  Detalle: {
+  Comentario: {
     type: String,
     required: true,
   },

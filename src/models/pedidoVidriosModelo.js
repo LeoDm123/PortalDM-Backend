@@ -17,6 +17,10 @@ const pedidoVidriosSchema = Schema({
     type: String,
     required: true,
   },
+  Estado: {
+    type: String,
+    required: true,
+  },
   Vidrios: {
     type: Array,
   },

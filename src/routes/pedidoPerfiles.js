@@ -6,6 +6,7 @@ const {
   recibirPedido,
   obtenerPedidoPorId,
   obtenerMaterialPorCodigo,
+  EditEstado,
 } = require("../controllers/pedidoPerfiles.controllers");
 
 const routerPedidoPerfiles = express.Router();
@@ -19,5 +20,6 @@ routerPedidoPerfiles.get(
   "/obtenerMaterialPorCodigo/:pedidoId/:codigoMat",
   obtenerMaterialPorCodigo
 );
+routerPedidoPerfiles.put("/editEstado/:pedidoId", EditEstado);
 
 module.exports = routerPedidoPerfiles;

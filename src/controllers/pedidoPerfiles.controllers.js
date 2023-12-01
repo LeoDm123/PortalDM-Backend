@@ -2,7 +2,7 @@ const Pedidos = require("../models/pedidoPerfilesModelo");
 const Materiales = require("../models/materialModelo");
 
 const crearPedido = async (req, res) => {
-  const { Obra, Fecha, NroPedido, OrdenCompra, Materiales } = req.body;
+  const { Obra, Fecha, NroPedido, OrdenCompra, Estado, Materiales } = req.body;
 
   try {
     let pedido = await Pedidos.findOne({
@@ -187,6 +187,32 @@ const obtenerMaterialPorCodigo = async (req, res) => {
   }
 };
 
+const EditEstado = async (req, res) => {
+  try {
+    const pedidoId = req.params.pedidoId;
+    const { estado } = req.body;
+
+    if (!estado) {
+      return res.status(400).json({ error: "El estado es requerido" });
+    }
+
+    const updatedPedido = await Pedidos.findOneAndUpdate(
+      { _id: pedidoId },
+      { $set: { Estado: estado } },
+      { new: true }
+    );
+
+    if (!updatedPedido) {
+      return res.status(404).json({ error: "Pedido no encontrado" });
+    }
+
+    res.json(updatedPedido);
+  } catch (error) {
+    console.error("Error al editar la operación:", error);
+    res.status(500).json({ error: "Error al editar la operación" });
+  }
+};
+
 module.exports = {
   crearPedido,
   obtenerPedidos,
@@ -194,4 +220,5 @@ module.exports = {
   recibirPedido,
   obtenerPedidoPorId,
   obtenerMaterialPorCodigo,
+  EditEstado,
 };

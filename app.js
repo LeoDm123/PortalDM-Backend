@@ -19,6 +19,7 @@ app.use("/pedidoPerfiles", require("./src/routes/pedidoPerfiles"));
 app.use("/pedidoHerrajes", require("./src/routes/pedidoHerrajes"));
 app.use("/pedidoVidrios", require("./src/routes/pedidoVidrios"));
 app.use("/pedidoMadera", require("./src/routes/pedidoMadera"));
+app.use("/pedidoVarios", require("./src/routes/pedidoVarios"));
 app.use("/mats", require("./src/routes/mats"));
 app.use("/inv", require("./src/routes/inv"));
 

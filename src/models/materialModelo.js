@@ -5,7 +5,7 @@ const materialSchema = Schema({
     type: String,
     required: true,
   },
-  Detalle: {
+  Descripcion: {
     type: String,
     required: true,
   },

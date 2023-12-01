@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const pedidoMaderaSchema = Schema({
+const pedidoVariosSchema = Schema({
   Cliente: {
     type: String,
     required: true,
@@ -30,4 +30,4 @@ const pedidoMaderaSchema = Schema({
   },
 });
 
-module.exports = model("PedidosMadera", pedidoMaderaSchema);
+module.exports = model("PedidosVarios", pedidoVariosSchema);

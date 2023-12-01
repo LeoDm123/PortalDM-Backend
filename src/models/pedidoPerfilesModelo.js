@@ -17,6 +17,10 @@ const pedidoPerfilesSchema = Schema({
     type: String,
     required: true,
   },
+  Estado: {
+    type: String,
+    required: true,
+  },
   Materiales: {
     type: Array,
   },
