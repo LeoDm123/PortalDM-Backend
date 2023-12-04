@@ -2,24 +2,36 @@ const Usuarios = require("../models/usuarioModelo");
 const bcrypt = require("bcrypt");
 
 const crearUsuario = async (req, res) => {
-  const { name, email, password } = req.body;
+  const {
+    userName,
+    userApellido,
+    userDNI,
+    userTelefono,
+    userDireccion,
+    userEmail,
+    userPassword,
+  } = req.body;
+
+  console.log("REQ:", req.body);
 
   try {
-    let usuario = await Usuarios.findOne({ email });
-    console.log(usuario);
+    let usuario = await Usuarios.findOne({
+      $or: [{ userEmail: userEmail }, { userDNI: userDNI }],
+    });
+    console.log("USER:", usuario);
 
     if (usuario) {
       return res.json({
-        msg: "El email que intenta registrase ya existe",
+        msg: "El usuario que intenta registrar ya existe",
       });
     }
 
-    usuario = new Usuarios(req.body);
+    let newUsuario = new Usuarios(req.body);
 
     const salt = bcrypt.genSaltSync(10);
-    usuario.password = bcrypt.hashSync(password, salt);
+    newUsuario.userPassword = bcrypt.hashSync(userPassword, salt);
 
-    await usuario.save();
+    await newUsuario.save();
 
     res.json({
       msg: "Usuario Registrado",
@@ -31,9 +43,9 @@ const crearUsuario = async (req, res) => {
 
 const loginUsuario = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { userEmail, userPassword } = req.body;
 
-    let usuario = await Usuarios.findOne({ email });
+    let usuario = await Usuarios.findOne({ userEmail });
 
     if (!usuario) {
       return res.json({
@@ -41,7 +53,10 @@ const loginUsuario = async (req, res) => {
       });
     }
 
-    const validarPassword = bcrypt.compareSync(password, usuario.password);
+    const validarPassword = bcrypt.compareSync(
+      userPassword,
+      usuario.userPassword
+    );
 
     if (!validarPassword) {
       res.json({
@@ -77,10 +92,10 @@ const DeleteUsuario = async (req, res) => {
     const deletedUser = await Usuarios.findByIdAndDelete(req.params.id);
 
     if (!deletedUser) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    return res.status(200).json({ message: "User deleted successfully" });
+    return res.status(200).json({ message: "Usuario eliminado correctamente" });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
