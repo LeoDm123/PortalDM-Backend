@@ -67,7 +67,7 @@ const crearCondicionPago = async (req, res) => {
 };
 
 const crearCondicionFacturacion = async (req, res) => {
-  const { Detalle } = req.body;
+  const { Detalle, equivIVA } = req.body;
 
   try {
     let settings = await Settings.findOne();
@@ -83,7 +83,7 @@ const crearCondicionFacturacion = async (req, res) => {
       });
     }
 
-    settings.CondicionFacturacion.push(Detalle);
+    settings.CondicionFacturacion.push({ Detalle, equivIVA });
     await settings.save();
 
     res.json({
