@@ -26,7 +26,6 @@ const InventarioLogSchema = Schema({
   },
   Unidad: {
     type: String,
-    required: true,
   },
   Comentario: {
     type: String,

@@ -112,35 +112,32 @@ const recibirPedido = async (req, res) => {
 
     const materialBD = await Materiales.findOne({ Codigo: codigoMat });
 
-    if (!materialBD) {
-      console.log("Material no encontrado en la base de datos");
-      return res
-        .status(404)
-        .json({ message: "Material no encontrado en la base de datos" });
+    let updatedStock;
+
+    if (materialBD) {
+      updatedStock = materialBD.Stock + CantRecibida;
+
+      await Materiales.findOneAndUpdate(
+        { Codigo: codigoMat },
+        { $set: { Stock: updatedStock } },
+        { new: true }
+      );
+
+      const MaterialLog = {
+        CantRecibida,
+        FechaRecep,
+        nroPedido,
+        Unidad,
+        TipoMov,
+        RemitoLog,
+      };
+
+      await Materiales.findOneAndUpdate(
+        { Codigo: codigoMat },
+        { $push: { InvLog: MaterialLog } },
+        { new: true }
+      );
     }
-
-    const updatedStock = (materialBD.Stock += CantRecibida);
-
-    const updatedMaterial = await Materiales.findOneAndUpdate(
-      { Codigo: codigoMat },
-      { $set: { Stock: updatedStock } },
-      { new: true }
-    );
-
-    const MaterialLog = {
-      CantRecibida,
-      FechaRecep,
-      nroPedido,
-      Unidad,
-      TipoMov,
-      RemitoLog,
-    };
-
-    const updatedMaterialLog = await Materiales.findOneAndUpdate(
-      { Codigo: codigoMat },
-      { $push: { InvLog: MaterialLog } },
-      { new: true }
-    );
 
     materialEncontrado.Recepciones = materialEncontrado.Recepciones || [];
     materialEncontrado.Recepciones.push(req.body);
