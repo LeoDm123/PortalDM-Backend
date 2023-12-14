@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const presSettingsSchema = Schema({
+const presPuertasSettingsSchema = Schema({
   ComponenteMarco: {
     type: Array,
   },
@@ -21,4 +21,4 @@ const presSettingsSchema = Schema({
   },
 });
 
-module.exports = model("PresSettings", presSettingsSchema);
+module.exports = model("PresPuertasSettings", presPuertasSettingsSchema);

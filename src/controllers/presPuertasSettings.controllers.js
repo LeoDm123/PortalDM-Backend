@@ -1,23 +1,27 @@
-const PresSettings = require("../models/presSettingsModelo");
+const PresPuertasSettings = require("../models/presPuertasSettingsModelo");
+const ComponenteMarco = require("../models/componenteMarcoModelo");
 
 const crearComponenteMarco = async (req, res) => {
-  const { Detalle } = req.body;
+  const { Detalle, MatId } = req.body;
 
   try {
-    let settings = await PresSettings.findOne();
+    let settings = await PresPuertasSettings.findOne();
 
     if (!settings) {
-      settings = new Settings();
+      settings = new PresPuertasSettings();
     }
 
-    const concepto = settings.ComponenteMarco.find((c) => c === Detalle);
-    if (concepto) {
+    const material = settings.ComponenteMarco.find((c) => c === Detalle);
+    if (material) {
       return res.status(400).json({
-        msg: "El concepto que intenta registrar ya existe",
+        msg: "El material que intenta registrar ya existe",
       });
     }
 
-    settings.ComponenteMarco.push(Detalle);
+    settings.ComponenteMarco.push({
+      Detalle: Detalle,
+      MatId: MatId,
+    });
     await settings.save();
 
     res.json({
@@ -37,7 +41,7 @@ const crearComponenteHoja = async (req, res) => {
   const { Detalle } = req.body;
 
   try {
-    let settings = await PresSettings.findOne();
+    let settings = await PresPuertasSettings.findOne();
 
     if (!settings) {
       settings = new Settings();
@@ -70,7 +74,7 @@ const crearApliques = async (req, res) => {
   const { Detalle } = req.body;
 
   try {
-    let settings = await PresSettings.findOne();
+    let settings = await PresPuertasSettings.findOne();
 
     if (!settings) {
       settings = new Settings();
@@ -103,7 +107,7 @@ const crearTerminaciones = async (req, res) => {
   const { Detalle } = req.body;
 
   try {
-    let settings = await PresSettings.findOne();
+    let settings = await PresPuertasSettings.findOne();
 
     if (!settings) {
       settings = new Settings();
@@ -136,7 +140,7 @@ const crearSeccionesMarcos = async (req, res) => {
   const { Detalle } = req.body;
 
   try {
-    let settings = await PresSettings.findOne();
+    let settings = await PresPuertasSettings.findOne();
 
     if (!settings) {
       settings = new Settings();
@@ -169,7 +173,7 @@ const crearExtras = async (req, res) => {
   const { Detalle } = req.body;
 
   try {
-    let settings = await PresSettings.findOne();
+    let settings = await PresPuertasSettings.findOne();
 
     if (!settings) {
       settings = new Settings();
@@ -200,7 +204,7 @@ const crearExtras = async (req, res) => {
 
 const obtenerSettings = async (req, res) => {
   try {
-    const concepto = await PresSettings.find();
+    const concepto = await PresPuertasSettings.find();
 
     if (!concepto) {
       return res.status(404).json({ message: "Data not found" });
@@ -215,10 +219,10 @@ const obtenerSettings = async (req, res) => {
 
 const deleteComponenteMarco = async (req, res) => {
   try {
-    const settings = await PresSettings.findOne();
+    const settings = await PresPuertasSettings.findOne();
 
     if (!settings) {
-      return res.status(404).json({ message: "Configuración no encontrada" });
+      return res.status(404).json({ message: "Material no encontrado" });
     }
 
     const { index } = req.params;
@@ -231,7 +235,7 @@ const deleteComponenteMarco = async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Concepto de pago eliminado correctamente" });
+      .json({ message: "Material eliminado correctamente" });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error interno del servidor" });
@@ -240,7 +244,7 @@ const deleteComponenteMarco = async (req, res) => {
 
 const deleteComponenteHoja = async (req, res) => {
   try {
-    const settings = await PresSettings.findOne();
+    const settings = await PresPuertasSettings.findOne();
 
     if (!settings) {
       return res.status(404).json({ message: "Configuración no encontrada" });
@@ -265,7 +269,7 @@ const deleteComponenteHoja = async (req, res) => {
 
 const deleteApliques = async (req, res) => {
   try {
-    const settings = await PresSettings.findOne();
+    const settings = await PresPuertasSettings.findOne();
 
     if (!settings) {
       return res.status(404).json({ message: "Configuración no encontrada" });
@@ -290,7 +294,7 @@ const deleteApliques = async (req, res) => {
 
 const deleteTerminaciones = async (req, res) => {
   try {
-    const settings = await PresSettings.findOne();
+    const settings = await PresPuertasSettings.findOne();
 
     if (!settings) {
       return res.status(404).json({ message: "Configuración no encontrada" });
@@ -315,7 +319,7 @@ const deleteTerminaciones = async (req, res) => {
 
 const deleteSeccionesMarcos = async (req, res) => {
   try {
-    const settings = await PresSettings.findOne();
+    const settings = await PresPuertasSettings.findOne();
 
     if (!settings) {
       return res.status(404).json({ message: "Configuración no encontrada" });
@@ -340,7 +344,7 @@ const deleteSeccionesMarcos = async (req, res) => {
 
 const deleteExtras = async (req, res) => {
   try {
-    const settings = await PresSettings.findOne();
+    const settings = await PresPuertasSettings.findOne();
 
     if (!settings) {
       return res.status(404).json({ message: "Configuración no encontrada" });
