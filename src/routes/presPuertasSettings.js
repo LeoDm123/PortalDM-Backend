@@ -2,15 +2,17 @@ const express = require("express");
 const {
   crearComponenteMarco,
   crearComponenteHoja,
+  crearRelleno,
   crearApliques,
-  crearTerminaciones,
+  crearTerminacion,
   crearSeccionesMarcos,
   crearExtras,
   obtenerSettings,
   deleteComponenteMarco,
   deleteComponenteHoja,
+  deleteRelleno,
   deleteApliques,
-  deleteTerminaciones,
+  deleteTerminacion,
   deleteSeccionesMarcos,
   deleteExtras,
 } = require("../controllers/presPuertasSettings.controllers");
@@ -19,8 +21,9 @@ const routerPresPuertasSettings = express.Router();
 
 routerPresPuertasSettings.post("/crearComponenteMarco", crearComponenteMarco);
 routerPresPuertasSettings.post("/crearComponenteHoja", crearComponenteHoja);
+routerPresPuertasSettings.post("/crearRelleno", crearRelleno);
 routerPresPuertasSettings.post("/crearApliques", crearApliques);
-routerPresPuertasSettings.post("/crearTerminaciones", crearTerminaciones);
+routerPresPuertasSettings.post("/crearTerminacion", crearTerminacion);
 routerPresPuertasSettings.post("/crearSeccionesMarcos", crearSeccionesMarcos);
 routerPresPuertasSettings.post("/crearExtras", crearExtras);
 routerPresPuertasSettings.get("/obtenerSettings", obtenerSettings);
@@ -32,10 +35,11 @@ routerPresPuertasSettings.delete(
   "/deleteComponenteHoja/:index",
   deleteComponenteHoja
 );
+routerPresPuertasSettings.delete("/deleteRelleno/:index", deleteRelleno);
 routerPresPuertasSettings.delete("/deleteApliques/:index", deleteApliques);
 routerPresPuertasSettings.delete(
-  "/deleteTerminaciones/:index",
-  deleteTerminaciones
+  "/deleteTerminacion/:index",
+  deleteTerminacion
 );
 routerPresPuertasSettings.delete(
   "/deleteSeccionesMarcos/:index",

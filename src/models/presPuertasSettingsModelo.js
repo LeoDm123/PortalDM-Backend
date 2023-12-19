@@ -7,6 +7,9 @@ const presPuertasSettingsSchema = Schema({
   ComponenteHoja: {
     type: Array,
   },
+  Relleno: {
+    type: Array,
+  },
   Apliques: {
     type: Array,
   },
