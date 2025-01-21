@@ -1,5 +1,5 @@
 const PresPuertasSettings = require("../models/presPuertasSettingsModelo");
-const ComponenteMarco = require("../models/componenteMarcoModelo");
+const { ObjectId } = require("mongodb");
 
 const crearComponenteMarco = async (req, res) => {
   const { Detalle, MatId, Caracteristica } = req.body;
@@ -168,13 +168,13 @@ const crearApliques = async (req, res) => {
 };
 
 const crearTerminacion = async (req, res) => {
-  const { Detalle } = req.body;
+  const { Detalle, materialesFromChild } = req.body;
 
   try {
     let settings = await PresPuertasSettings.findOne();
 
     if (!settings) {
-      settings = new Settings();
+      settings = new PresPuertasSettings();
     }
 
     const condicion = settings.Terminaciones.find((c) => c === Detalle);
@@ -184,11 +184,61 @@ const crearTerminacion = async (req, res) => {
       });
     }
 
-    settings.Terminaciones.push(Detalle);
+    settings.Terminaciones.push({
+      Detalle: Detalle,
+      Materiales: materialesFromChild,
+    });
     await settings.save();
 
     res.json({
       msg: "Terminación registrada",
+      data: settings,
+    });
+  } catch (error) {
+    console.error(error.message);
+
+    res.status(500).json({
+      msg: "Error interno del servidor",
+    });
+  }
+};
+
+const editarTerminacion = async (req, res) => {
+  const { terminacionIndex, Detalle, editedMats } = req.body;
+
+  try {
+    let settings = await PresPuertasSettings.findOne();
+
+    if (!settings) {
+      return res.status(404).json({
+        msg: "Configuración no encontrada",
+      });
+    }
+
+    const terminaciones = settings.Terminaciones;
+
+    const Index = terminaciones.findIndex((t) => {
+      console.log("t.index:", t.index);
+      console.log("terminacionIndex:", terminacionIndex);
+      return t.index === terminacionIndex;
+    });
+
+    if (Index === -1) {
+      return res.status(404).json({
+        msg: "Índice de terminación no válido",
+      });
+    }
+
+    if (Detalle) {
+      settings.Terminaciones[terminacionIndex].Detalle = Detalle;
+    }
+
+    settings.Terminaciones[terminacionIndex].Materiales = editedMats;
+
+    await settings.save();
+
+    res.json({
+      msg: "Terminación actualizada",
       data: settings,
     });
   } catch (error) {
@@ -207,7 +257,7 @@ const crearSeccionesMarcos = async (req, res) => {
     let settings = await PresPuertasSettings.findOne();
 
     if (!settings) {
-      settings = new Settings();
+      settings = new PresPuertasSettings();
     }
 
     const condicion = settings.SeccionesMarcos.find((c) => c === Detalle);
@@ -240,7 +290,7 @@ const crearExtras = async (req, res) => {
     let settings = await PresPuertasSettings.findOne();
 
     if (!settings) {
-      settings = new Settings();
+      settings = new PresPuertasSettings();
     }
 
     const condicion = settings.Extras.find((c) => c === Detalle);
@@ -462,6 +512,7 @@ module.exports = {
   crearRelleno,
   crearApliques,
   crearTerminacion,
+  editarTerminacion,
   crearSeccionesMarcos,
   crearExtras,
   obtenerSettings,

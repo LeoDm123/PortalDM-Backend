@@ -5,6 +5,7 @@ const {
   crearRelleno,
   crearApliques,
   crearTerminacion,
+  editarTerminacion,
   crearSeccionesMarcos,
   crearExtras,
   obtenerSettings,
@@ -27,6 +28,7 @@ routerPresPuertasSettings.post("/crearTerminacion", crearTerminacion);
 routerPresPuertasSettings.post("/crearSeccionesMarcos", crearSeccionesMarcos);
 routerPresPuertasSettings.post("/crearExtras", crearExtras);
 routerPresPuertasSettings.get("/obtenerSettings", obtenerSettings);
+routerPresPuertasSettings.put("/editarTerminacion", editarTerminacion);
 routerPresPuertasSettings.delete(
   "/deleteComponenteMarco/:index",
   deleteComponenteMarco

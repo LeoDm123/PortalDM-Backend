@@ -1,5 +1,6 @@
 const Usuarios = require("../models/usuarioModelo");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const crearUsuario = async (req, res) => {
   const {
@@ -41,34 +42,51 @@ const crearUsuario = async (req, res) => {
   }
 };
 
-const loginUsuario = async (req, res) => {
+const userLogin = async (req, res) => {
   try {
     const { userEmail, userPassword } = req.body;
 
-    let usuario = await Usuarios.findOne({ userEmail });
+    let user = await Usuarios.findOne({ userEmail }).exec();
 
-    if (!usuario) {
-      return res.json({
-        msg: "El Email o la contraseña es incorrectas",
+    if (!user) {
+      return res.status(401).json({
+        msg: "El email son incorrectos",
       });
     }
 
-    const validarPassword = bcrypt.compareSync(
+    const isPasswordValid = await bcrypt.compare(
       userPassword,
-      usuario.userPassword
+      user.userPassword
     );
 
-    if (!validarPassword) {
-      res.json({
-        msg: "El email o la contraseña es incorrectos",
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        msg: "la contraseña son incorrectos",
       });
     }
 
-    res.json({
-      msg: "Usuario logueado",
+    const token = jwt.sign(
+      { id: user._id, email: user.email, role: user.rol },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.status(200).json({
+      msg: "Usuario logeado",
+      token: token,
+      user: {
+        avatar: user.avatar || "",
+        userName: user.userName || "Anonymous",
+        userApellido: user.userApellido || "Anonymous",
+        authority: [user.userCategoria || "USER"],
+        email: user.userEmail,
+      },
     });
   } catch (error) {
     console.log(error);
+    res.status(500).json({
+      msg: "Hubo un problema a la hora de iniciar sesión",
+    });
   }
 };
 
@@ -139,7 +157,7 @@ const obtenerUsuarioPorId = async (req, res) => {
 
 module.exports = {
   crearUsuario,
-  loginUsuario,
+  userLogin,
   obtenerUsuarios,
   DeleteUsuario,
   EditUsuario,

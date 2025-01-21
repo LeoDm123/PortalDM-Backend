@@ -4,7 +4,6 @@ const bcrypt = require("bcrypt");
 
 const crearPresupuesto = async (req, res) => {
   const {
-    Cliente,
     PresupuestoCodigo,
     CondicionFacturacion,
     IVA,
