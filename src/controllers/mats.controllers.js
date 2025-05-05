@@ -58,7 +58,7 @@ const obtenerMats = async (req, res) => {
 };
 
 const borrarMaterial = async (req, res) => {
-  const { MatID } = req.params;
+  const MatID = req.params.id;
 
   console.log("mat a eliminar", MatID);
 
