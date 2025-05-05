@@ -60,6 +60,8 @@ const obtenerMats = async (req, res) => {
 const borrarMaterial = async (req, res) => {
   const { MatID } = req.body;
 
+  console.log("mat a eliminar", MatID);
+
   try {
     const material = await Materiales.findOne({ MatID });
 
