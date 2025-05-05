@@ -63,7 +63,7 @@ const borrarMaterial = async (req, res) => {
   console.log("mat a eliminar", MatID);
 
   try {
-    const material = await Materiales.findOne({ MatID });
+    const material = await Materiales.findById(MatID);
 
     if (!material) {
       return res.json({
