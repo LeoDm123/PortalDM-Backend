@@ -72,7 +72,7 @@ const borrarMaterial = async (req, res) => {
     await material.deleteOne();
 
     res.json({
-      message: "Material eliminado correctamente",
+      message: `Material ${material.Descripcion} eliminado correctamente`,
     });
   } catch (error) {
     console.log(error);
