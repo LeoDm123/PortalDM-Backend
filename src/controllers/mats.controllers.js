@@ -121,7 +121,7 @@ const obtenerMatPorId = async (req, res) => {
 const retirarIngresarMaterial = async (req, res) => {
   try {
     const codigoMat = req.params.id;
-    const { Cantidad, TipoMov, Fecha, Unidad } = req.body;
+    const { Cantidad, TipoMov, Fecha, Unidad, nroPedido, RemitoLog } = req.body;
 
     const materialEncontrado = await Materiales.findOne({ _id: codigoMat });
 
@@ -158,8 +158,10 @@ const retirarIngresarMaterial = async (req, res) => {
     const MaterialLog = {
       CantRecibida: Cantidad,
       FechaRecep: Fecha,
+      nroPedido,
       Unidad,
       TipoMov,
+      RemitoLog,
     };
 
     const updatedMaterialLog = await Materiales.findOneAndUpdate(
