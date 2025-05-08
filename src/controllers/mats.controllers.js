@@ -123,6 +123,8 @@ const retirarIngresarMaterial = async (req, res) => {
     const codigoMat = req.params.id;
     const { Cantidad, TipoMov, Fecha, Unidad, nroPedido, RemitoLog } = req.body;
 
+    console.log(req.body);
+
     const materialEncontrado = await Materiales.findOne({ _id: codigoMat });
 
     if (!materialEncontrado) {
