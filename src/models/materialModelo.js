@@ -1,6 +1,31 @@
 const { Schema, model } = require("mongoose");
 
-const materialSchema = Schema({
+const invLogSchema = new Schema({
+  CantRecibida: {
+    type: Number,
+    required: true,
+  },
+  FechaRecep: {
+    type: String,
+    required: true,
+  },
+  nroPedido: {
+    type: String,
+  },
+  Unidad: {
+    type: String,
+    required: true,
+  },
+  TipoMov: {
+    type: String,
+    required: true,
+  },
+  RemitoLog: {
+    type: String,
+  },
+});
+
+const materialSchema = new Schema({
   Codigo: {
     type: String,
     required: true,
@@ -42,7 +67,8 @@ const materialSchema = Schema({
     required: true,
   },
   InvLog: {
-    type: Array,
+    type: [invLogSchema],
+    default: [],
   },
 });
 

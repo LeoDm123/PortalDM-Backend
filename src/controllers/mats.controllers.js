@@ -123,15 +123,10 @@ const retirarIngresarMaterial = async (req, res) => {
     const codigoMat = req.params.id;
     const { Cantidad, TipoMov, Fecha, Unidad, nroPedido, RemitoLog } = req.body;
 
-    console.log(req.body);
-
-    const materialEncontrado = await Materiales.findOne({ _id: codigoMat });
+    const materialEncontrado = await Materiales.findById(codigoMat);
 
     if (!materialEncontrado) {
-      console.log("Material no encontrado en el pedido");
-      return res
-        .status(404)
-        .json({ message: "Material no encontrado en el pedido" });
+      return res.status(404).json({ message: "Material no encontrado" });
     }
 
     let updatedStock;
@@ -140,24 +135,16 @@ const retirarIngresarMaterial = async (req, res) => {
       updatedStock = materialEncontrado.Stock + Cantidad;
     } else if (TipoMov === "Egreso") {
       if (materialEncontrado.Stock < Cantidad) {
-        console.log("Stock insuficiente para el egreso");
         return res
           .status(400)
           .json({ message: "Stock insuficiente para el egreso" });
       }
       updatedStock = materialEncontrado.Stock - Cantidad;
     } else {
-      console.log("Tipo de movimiento no válido");
       return res.status(400).json({ message: "Tipo de movimiento no válido" });
     }
 
-    const updatedMaterial = await Materiales.findOneAndUpdate(
-      { _id: codigoMat },
-      { $set: { Stock: updatedStock } },
-      { new: true }
-    );
-
-    const MaterialLog = {
+    const materialLog = {
       CantRecibida: Cantidad,
       FechaRecep: Fecha,
       nroPedido,
@@ -166,9 +153,12 @@ const retirarIngresarMaterial = async (req, res) => {
       RemitoLog,
     };
 
-    const updatedMaterialLog = await Materiales.findOneAndUpdate(
-      { _id: codigoMat },
-      { $push: { InvLog: MaterialLog } },
+    const updatedMaterial = await Materiales.findByIdAndUpdate(
+      codigoMat,
+      {
+        $set: { Stock: updatedStock },
+        $push: { InvLog: materialLog },
+      },
       { new: true }
     );
 
