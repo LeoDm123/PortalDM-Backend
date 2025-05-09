@@ -13,9 +13,9 @@ const crearLog = async (req, res) => {
   } = req.body;
 
   try {
-    InventarioLog = new InventarioLog(req.body);
+    nuevoLog = new InventarioLog(req.body);
 
-    await InventarioLog.save();
+    await nuevoLog.save();
 
     res.json({
       msg: "Movimiento de inventario registrado",
