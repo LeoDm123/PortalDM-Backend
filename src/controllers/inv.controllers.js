@@ -13,13 +13,36 @@ const crearLog = async (req, res) => {
   } = req.body;
 
   try {
+    const material = await Materiales.findOne({ Codigo });
+
+    if (!material) {
+      return res.status(404).json({ message: "Material no encontrado" });
+    }
+
+    let nuevoStock;
+
+    const cantidadNumerica = parseFloat(Cantidad);
+
+    if (TipoMov === "Ingreso") {
+      nuevoStock = material.Stock + cantidadNumerica;
+    } else if (TipoMov === "Egreso") {
+      if (material.Stock < cantidadNumerica) {
+        return res
+          .status(400)
+          .json({ message: "Stock insuficiente para el egreso" });
+      }
+      nuevoStock = material.Stock - cantidadNumerica;
+    } else {
+      return res.status(400).json({ message: "Tipo de movimiento no válido" });
+    }
+
     const nuevoLog = new InventarioLog({
       Codigo,
       Descripcion,
       Fecha,
       NroPedido,
       TipoMov,
-      Cantidad,
+      Cantidad: cantidadNumerica,
       Unidad,
       Comentario,
     });
@@ -28,7 +51,7 @@ const crearLog = async (req, res) => {
 
     const logParaMaterial = {
       _id: nuevoLog._id,
-      CantRecibida: Cantidad,
+      CantRecibida: cantidadNumerica,
       FechaRecep: Fecha,
       nroPedido: NroPedido,
       Unidad,
@@ -38,11 +61,14 @@ const crearLog = async (req, res) => {
 
     await Materiales.updateOne(
       { Codigo },
-      { $push: { InvLog: logParaMaterial } }
+      {
+        $set: { Stock: nuevoStock },
+        $push: { InvLog: logParaMaterial },
+      }
     );
 
     res.json({
-      message: "Movimiento de inventario registrado correctamente",
+      message: "Movimiento registrado y stock actualizado",
       logId: nuevoLog._id,
     });
   } catch (error) {
