@@ -47,13 +47,22 @@ const borrarLog = async (req, res) => {
   const { LogID } = req.body;
 
   try {
-    const inventarioLog = await InventarioLog.findOne({ LogID });
+    const inventarioLog = await InventarioLog.findById(LogID);
 
     if (!inventarioLog) {
-      return res.json({
+      return res.status(404).json({
         message: "Movimiento de inventario no encontrado",
       });
     }
+
+    await Materiales.updateOne(
+      { Codigo: inventarioLog.Codigo },
+      {
+        $pull: {
+          InvLog: { _id: LogID },
+        },
+      }
+    );
 
     await inventarioLog.deleteOne();
 
@@ -61,7 +70,7 @@ const borrarLog = async (req, res) => {
       message: "Movimiento de inventario eliminado correctamente",
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({
       message: "Error en el servidor",
     });
