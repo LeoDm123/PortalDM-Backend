@@ -1,4 +1,5 @@
 const InventarioLog = require("../models/inventarioLogModelo");
+const Materiales = require("../models/materialModelo");
 
 const crearLog = async (req, res) => {
   const {
