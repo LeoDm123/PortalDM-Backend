@@ -13,17 +13,42 @@ const crearLog = async (req, res) => {
   } = req.body;
 
   try {
-    nuevoLog = new InventarioLog(req.body);
+    const nuevoLog = new InventarioLog({
+      Codigo,
+      Descripcion,
+      Fecha,
+      NroPedido,
+      TipoMov,
+      Cantidad,
+      Unidad,
+      Comentario,
+    });
 
     await nuevoLog.save();
 
+    const logParaMaterial = {
+      _id: nuevoLog._id,
+      CantRecibida: Cantidad,
+      FechaRecep: Fecha,
+      nroPedido: NroPedido,
+      Unidad,
+      TipoMov,
+      RemitoLog: Comentario,
+    };
+
+    await Materiales.updateOne(
+      { Codigo },
+      { $push: { InvLog: logParaMaterial } }
+    );
+
     res.json({
-      msg: "Movimiento de inventario registrado",
+      message: "Movimiento de inventario registrado correctamente",
+      logId: nuevoLog._id,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error al crear log:", error);
     res.status(500).json({
-      msg: "Error en el servidor",
+      message: "Error en el servidor",
     });
   }
 };
