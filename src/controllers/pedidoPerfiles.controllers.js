@@ -81,53 +81,49 @@ const recibirPedido = async (req, res) => {
   try {
     const pedidoId = req.params.pedidoId;
     const codigoMat = req.params.codigoMat;
-    const {
-      CantRecibida,
-      FechaRecep,
-      nroPedido,
-      NroRemito,
-      Unidad,
-      TipoMov,
-      RemitoLog,
-    } = req.body;
+    const { CantRecibida, FechaRecep, nroPedido, Unidad, TipoMov, RemitoLog } =
+      req.body;
 
-    const pedido = await Pedidos.findOne({ _id: pedidoId });
-
+    const pedido = await Pedidos.findById(pedidoId);
     if (!pedido) {
-      console.log("Pedido no encontrado");
       return res.status(404).json({ message: "Pedido no encontrado" });
     }
 
     const materialEncontrado = pedido.Materiales.find(
       (material) => material.Codigo === codigoMat
     );
-
     if (!materialEncontrado) {
-      console.log("Material no encontrado en el pedido");
       return res
         .status(404)
         .json({ message: "Material no encontrado en el pedido" });
     }
 
     const materialBD = await Materiales.findOne({ Codigo: codigoMat });
-
     if (!materialBD) {
-      console.log("Material no encontrado en la base de datos");
       return res
         .status(404)
         .json({ message: "Material no encontrado en la base de datos" });
     }
 
-    const updatedStock = (materialBD.Stock += CantRecibida);
+    const cantidadNumerica = parseFloat(CantRecibida);
+    const nuevoStock = materialBD.Stock + cantidadNumerica;
 
-    const updatedMaterial = await Materiales.findOneAndUpdate(
-      { Codigo: codigoMat },
-      { $set: { Stock: updatedStock } },
-      { new: true }
-    );
+    const nuevoLog = new InventarioLog({
+      Codigo: materialBD.Codigo,
+      Descripcion: materialBD.Descripcion,
+      Fecha: FechaRecep,
+      NroPedido: nroPedido,
+      TipoMov,
+      Cantidad: cantidadNumerica,
+      Unidad,
+      Comentario: RemitoLog,
+    });
 
-    const MaterialLog = {
-      CantRecibida,
+    await nuevoLog.save();
+
+    const logParaMaterial = {
+      _id: nuevoLog._id,
+      CantRecibida: cantidadNumerica,
       FechaRecep,
       nroPedido,
       Unidad,
@@ -135,24 +131,39 @@ const recibirPedido = async (req, res) => {
       RemitoLog,
     };
 
-    const updatedMaterialLog = await Materiales.findOneAndUpdate(
+    await Materiales.updateOne(
       { Codigo: codigoMat },
-      { $push: { InvLog: MaterialLog } },
-      { new: true }
+      {
+        $set: { Stock: nuevoStock },
+        $push: { InvLog: logParaMaterial },
+      }
     );
 
     materialEncontrado.Recepciones = materialEncontrado.Recepciones || [];
-    materialEncontrado.Recepciones.push(req.body);
+    materialEncontrado.Recepciones.push({
+      CantRecibida: cantidadNumerica,
+      FechaRecep,
+      nroPedido,
+      Unidad,
+      TipoMov,
+      RemitoLog,
+    });
 
-    const updatedPedido = await Pedidos.findOneAndUpdate(
-      { _id: pedidoId },
+    const updatedPedido = await Pedidos.findByIdAndUpdate(
+      pedidoId,
       { $set: { Materiales: pedido.Materiales } },
       { new: true }
     );
 
-    return res.status(200).json(materialEncontrado);
+    return res.status(200).json({
+      message:
+        "Recepción registrada, stock actualizado y log creado correctamente",
+      logId: nuevoLog._id,
+      nuevoStock,
+      updatedPedido,
+    });
   } catch (error) {
-    console.error(error);
+    console.error("Error en recibirPedido:", error);
     return res.status(500).json({ message: "Error interno del servidor" });
   }
 };
