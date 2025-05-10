@@ -107,22 +107,41 @@ const borrarLog = async (req, res) => {
       });
     }
 
+    const material = await Materiales.findOne({ Codigo: inventarioLog.Codigo });
+
+    if (!material) {
+      return res.status(404).json({
+        message: "Material asociado no encontrado",
+      });
+    }
+
+    const cantidadNumerica = parseFloat(inventarioLog.Cantidad);
+    let nuevoStock;
+
+    if (inventarioLog.TipoMov === "Ingreso") {
+      nuevoStock = material.Stock - cantidadNumerica;
+    } else if (inventarioLog.TipoMov === "Egreso") {
+      nuevoStock = material.Stock + cantidadNumerica;
+    } else {
+      return res.status(400).json({ message: "Tipo de movimiento inválido" });
+    }
+
     await Materiales.updateOne(
       { Codigo: inventarioLog.Codigo },
       {
-        $pull: {
-          InvLog: { _id: LogID },
-        },
+        $set: { Stock: nuevoStock },
+        $pull: { InvLog: { _id: LogID } },
       }
     );
 
     await inventarioLog.deleteOne();
 
     res.json({
-      message: "Movimiento de inventario eliminado correctamente",
+      message: "Log eliminado y stock actualizado correctamente",
+      nuevoStock,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error al borrar el log:", error);
     res.status(500).json({
       message: "Error en el servidor",
     });
