@@ -1,5 +1,6 @@
 const Pedidos = require("../models/pedidoPerfilesModelo");
 const Materiales = require("../models/materialModelo");
+const InventarioLog = require("../models/inventarioLogModelo");
 
 const crearPedido = async (req, res) => {
   const { Obra, Fecha, NroPedido, OrdenCompra, Estado, Materiales } = req.body;
