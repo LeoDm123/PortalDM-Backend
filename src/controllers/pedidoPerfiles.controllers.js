@@ -82,8 +82,15 @@ const recibirPedido = async (req, res) => {
   try {
     const pedidoId = req.params.pedidoId;
     const codigoMat = req.params.codigoMat;
-    const { CantRecibida, FechaRecep, nroPedido, Unidad, TipoMov, RemitoLog } =
-      req.body;
+    const {
+      CantRecibida,
+      FechaRecep,
+      nroPedido,
+      Unidad,
+      TipoMov,
+      RemitoLog,
+      NroRemito,
+    } = req.body;
 
     const pedido = await Pedidos.findById(pedidoId);
     if (!pedido) {
@@ -142,12 +149,14 @@ const recibirPedido = async (req, res) => {
 
     materialEncontrado.Recepciones = materialEncontrado.Recepciones || [];
     materialEncontrado.Recepciones.push({
+      _id: nuevoLog._id,
       CantRecibida: cantidadNumerica,
       FechaRecep,
       nroPedido,
       Unidad,
       TipoMov,
       RemitoLog,
+      NroRemito,
     });
 
     const updatedPedido = await Pedidos.findByIdAndUpdate(
