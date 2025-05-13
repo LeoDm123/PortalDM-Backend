@@ -1,6 +1,8 @@
 const InventarioLog = require("../models/inventarioLogModelo");
 const Materiales = require("../models/materialModelo");
-const Pedidos = require("../models/pedidoPerfilesModelo");
+const PedidosPerfiles = require("../models/pedidoPerfilesModelo");
+const PedidosHerrajes = require("../models/pedidoHerrajesModelo");
+const PedidosVidrio = require("../models/pedidoVidriosModelo");
 
 const crearLog = async (req, res) => {
   const {
@@ -101,19 +103,17 @@ const borrarLog = async (req, res) => {
 
   try {
     const inventarioLog = await InventarioLog.findById(LogID);
-
     if (!inventarioLog) {
-      return res.status(404).json({
-        message: "Movimiento de inventario no encontrado",
-      });
+      return res
+        .status(404)
+        .json({ message: "Movimiento de inventario no encontrado" });
     }
 
     const material = await Materiales.findOne({ Codigo: inventarioLog.Codigo });
-
     if (!material) {
-      return res.status(404).json({
-        message: "Material asociado no encontrado",
-      });
+      return res
+        .status(404)
+        .json({ message: "Material asociado no encontrado" });
     }
 
     const cantidadNumerica = parseFloat(inventarioLog.Cantidad);
@@ -127,7 +127,6 @@ const borrarLog = async (req, res) => {
       return res.status(400).json({ message: "Tipo de movimiento inválido" });
     }
 
-    // 1. Ajustar el stock y eliminar log en Materiales
     await Materiales.updateOne(
       { Codigo: inventarioLog.Codigo },
       {
@@ -136,21 +135,43 @@ const borrarLog = async (req, res) => {
       }
     );
 
-    // 2. Eliminar también la recepción dentro del Pedido
-    await Pedidos.updateOne(
-      { "Materiales.Recepciones._id": LogID },
-      {
-        $pull: {
-          "Materiales.$[].Recepciones": { _id: LogID },
-        },
-      }
-    );
+    const colecciones = [
+      { nombre: "Perfiles", modelo: PedidosPerfiles },
+      { nombre: "Vidrio", modelo: PedidosVidrio },
+      { nombre: "Herrajes", modelo: PedidosHerrajes },
+    ];
 
-    // 3. Eliminar log en InventarioLog
+    let encontrada = false;
+    for (const coleccion of colecciones) {
+      const pedido = await coleccion.modelo.findOne({
+        NroPedido: inventarioLog.NroPedido,
+        "Materiales.Recepciones._id": LogID,
+      });
+
+      if (pedido) {
+        await coleccion.modelo.updateOne(
+          {
+            _id: pedido._id,
+            "Materiales.Recepciones._id": LogID,
+          },
+          {
+            $pull: {
+              "Materiales.$[].Recepciones": { _id: LogID },
+            },
+          }
+        );
+
+        encontrada = true;
+        break;
+      }
+    }
+
     await inventarioLog.deleteOne();
 
     res.json({
-      message: "Log eliminado y stock actualizado correctamente",
+      message: `Log eliminado, stock actualizado${
+        encontrada ? " y recepción eliminada del pedido" : ""
+      }.`,
       nuevoStock,
     });
   } catch (error) {
