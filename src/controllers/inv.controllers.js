@@ -1,5 +1,6 @@
 const InventarioLog = require("../models/inventarioLogModelo");
 const Materiales = require("../models/materialModelo");
+const Pedidos = require("../models/pedidoPerfilesModelo");
 
 const crearLog = async (req, res) => {
   const {
@@ -126,6 +127,7 @@ const borrarLog = async (req, res) => {
       return res.status(400).json({ message: "Tipo de movimiento inválido" });
     }
 
+    // 1. Ajustar el stock y eliminar log en Materiales
     await Materiales.updateOne(
       { Codigo: inventarioLog.Codigo },
       {
@@ -134,6 +136,17 @@ const borrarLog = async (req, res) => {
       }
     );
 
+    // 2. Eliminar también la recepción dentro del Pedido
+    await Pedidos.updateOne(
+      { "Materiales.Recepciones._id": LogID },
+      {
+        $pull: {
+          "Materiales.$[].Recepciones": { _id: LogID },
+        },
+      }
+    );
+
+    // 3. Eliminar log en InventarioLog
     await inventarioLog.deleteOne();
 
     res.json({
