@@ -6,6 +6,7 @@ const {
   DeleteCliente,
   EditCliente,
   obtenerClientePorId,
+  obtenerClientesActivos,
 } = require("../controllers/client.controllers");
 
 const routerClients = express.Router();
@@ -16,5 +17,6 @@ routerClients.get("/obtenerClientes", obtenerClientes);
 routerClients.delete("/deleteCliente/:id", DeleteCliente);
 routerClients.put("/editCliente/:id", EditCliente);
 routerClients.get("/obtenerClientePorId/:id", obtenerClientePorId);
+routerClients.get("/obtenerClientesActivos", obtenerClientesActivos);
 
 module.exports = routerClients;

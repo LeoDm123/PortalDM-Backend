@@ -73,7 +73,7 @@ const obtenerClientes = async (req, res) => {
     const clientes = await Clientes.find();
 
     if (!clientes) {
-      return res.status(404).json({ message: "Currency data not found" });
+      return res.status(404).json({ message: "Client data not found" });
     }
 
     return res.status(200).json(clientes);
@@ -133,6 +133,23 @@ const obtenerClientePorId = async (req, res) => {
   }
 };
 
+const obtenerClientesActivos = async (req, res) => {
+  try {
+    const clientes = await Clientes.find({ ClientStatus: "Activo" });
+
+    if (!clientes || clientes.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No se encontraron clientes activos" });
+    }
+
+    return res.status(200).json(clientes);
+  } catch (error) {
+    console.error("Error al obtener clientes activos:", error);
+    return res.status(500).json({ message: "Error interno del servidor" });
+  }
+};
+
 module.exports = {
   crearCliente,
   borrarCliente,
@@ -140,4 +157,5 @@ module.exports = {
   DeleteCliente,
   EditCliente,
   obtenerClientePorId,
+  obtenerClientesActivos,
 };
