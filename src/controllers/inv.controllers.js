@@ -185,7 +185,7 @@ const borrarLog = async (req, res) => {
 const obtenerUltimosMovimientos = async (req, res) => {
   try {
     const ultimosMovimientos = await InventarioLog.find()
-      .sort({ Fecha: -1 }) // Orden descendente por fecha
+      .sort({ Fecha: -1 })
       .limit(10);
 
     res.status(200).json(ultimosMovimientos);

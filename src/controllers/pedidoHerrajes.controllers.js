@@ -213,6 +213,21 @@ const EditEstado = async (req, res) => {
   }
 };
 
+const obtenerPedidosActivos = async (req, res) => {
+  try {
+    const pedidosActivos = await Pedidos.find({ Estado: "Activo" });
+
+    if (!pedidosActivos || pedidosActivos.length === 0) {
+      return res.status(404).json({ message: "No hay pedidos activos" });
+    }
+
+    return res.status(200).json(pedidosActivos);
+  } catch (error) {
+    console.error("Error al obtener pedidos activos:", error);
+    return res.status(500).json({ message: "Error interno del servidor" });
+  }
+};
+
 module.exports = {
   crearPedido,
   obtenerPedidos,
@@ -221,4 +236,5 @@ module.exports = {
   obtenerPedidoPorId,
   obtenerMaterialPorCodigo,
   EditEstado,
+  obtenerPedidosActivos,
 };

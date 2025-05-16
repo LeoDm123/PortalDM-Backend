@@ -7,6 +7,7 @@ const {
   obtenerPedidoPorId,
   obtenerMaterialPorCodigo,
   EditEstado,
+  obtenerPedidosActivos,
 } = require("../controllers/pedidoHerrajes.controllers");
 
 const routerPedidoHerrajes = express.Router();
@@ -21,5 +22,6 @@ routerPedidoHerrajes.get(
   obtenerMaterialPorCodigo
 );
 routerPedidoHerrajes.put("/editEstado/:pedidoId", EditEstado);
+routerPedidoHerrajes.get("/obtenerPedidosActivos", obtenerPedidosActivos);
 
 module.exports = routerPedidoHerrajes;
