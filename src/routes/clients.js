@@ -18,6 +18,5 @@ routerClients.delete("/deleteCliente/:id", DeleteCliente);
 routerClients.put("/editCliente/:id", EditCliente);
 routerClients.get("/obtenerClientePorId/:id", obtenerClientePorId);
 routerClients.get("/obtenerClientesActivos", obtenerClientesActivos);
-//hola
 
 module.exports = routerClients;

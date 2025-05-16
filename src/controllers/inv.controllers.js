@@ -182,8 +182,24 @@ const borrarLog = async (req, res) => {
   }
 };
 
+const obtenerUltimosMovimientos = async (req, res) => {
+  try {
+    const ultimosMovimientos = await InventarioLog.find()
+      .sort({ Fecha: -1 }) // Orden descendente por fecha
+      .limit(10);
+
+    res.status(200).json(ultimosMovimientos);
+  } catch (error) {
+    console.error("Error al obtener los últimos movimientos:", error);
+    res.status(500).json({
+      message: "Error al obtener los últimos movimientos",
+    });
+  }
+};
+
 module.exports = {
   crearLog,
   obtenerLogs,
   borrarLog,
+  obtenerUltimosMovimientos,
 };
