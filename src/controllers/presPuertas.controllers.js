@@ -17,11 +17,11 @@ const crearPresupuesto = async (req, res) => {
 
     if (presupuestoPuerta) {
       return res.status(404).json({
-        msg: "El presupuesto ya existe no encontrado",
+        msg: "El presupuesto ya existe",
       });
     }
 
-    const presupuesto = new PresupuestoPuertas({
+    const presupuesto = new PresupuestoPuerta({
       Cliente,
       Obra,
       Codigo,
