@@ -25,9 +25,28 @@ const presPuertaSchema = Schema({
   PrecioFinal: {
     type: Number,
   },
-  Puertas: {
-    type: Array,
-  },
+  Puertas: [
+    {
+      Nombre: String,
+      Ancho: Number,
+      Alto: Number,
+      Cantidad: Number,
+      Marco: String,
+      Hoja: String,
+      Terminacion: String,
+      Vidrio: {
+        Tipo: String,
+        Ancho: Number,
+        Alto: Number,
+        Cantidad: Number,
+      },
+      MarcoEnvolvente: Boolean,
+      SinTerminacion: Boolean,
+      SinColocacion: Boolean,
+      PuertaPrincipal: Boolean,
+      ComplejidadExtra: Number,
+    },
+  ],
 });
 
 module.exports = model("PresupuestoPuerta", presPuertaSchema);
