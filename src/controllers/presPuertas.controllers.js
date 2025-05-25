@@ -1,4 +1,4 @@
-const PresupuestoPuerta = require("../models/PresPuertaModelo");
+const PresupuestoPuertas = require("../models/PresPuertaModelo");
 
 const crearPresupuesto = async (req, res) => {
   const {
@@ -13,7 +13,7 @@ const crearPresupuesto = async (req, res) => {
   } = req.body;
 
   try {
-    const presupuestoPuerta = await PresupuestoPuerta.findOne({ Codigo });
+    const presupuestoPuerta = await PresupuestoPuertas.findOne({ Codigo });
 
     if (presupuestoPuerta) {
       return res.status(404).json({
@@ -21,7 +21,7 @@ const crearPresupuesto = async (req, res) => {
       });
     }
 
-    const presupuesto = new PresupuestoPuerta({
+    const presupuesto = new PresupuestoPuertas({
       Cliente,
       Obra,
       Codigo,
@@ -32,9 +32,7 @@ const crearPresupuesto = async (req, res) => {
       Puertas,
     });
 
-    PresupuestoPuerta.push(presupuesto);
-
-    await Promise.all([PresupuestoPuerta.save()]);
+    await PresupuestoPuertas.save();
 
     res.json({
       msg: "Presupuesto creado correctamente",
