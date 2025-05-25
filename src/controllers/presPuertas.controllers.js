@@ -32,7 +32,7 @@ const crearPresupuesto = async (req, res) => {
       Puertas,
     });
 
-    await PresupuestoPuertas.save();
+    await presupuesto.save();
 
     res.json({
       msg: "Presupuesto creado correctamente",
