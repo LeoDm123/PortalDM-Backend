@@ -9,6 +9,7 @@ const crearPresupuesto = async (req, res) => {
     Precio,
     IVA,
     PrecioFinal,
+    Status,
     Puertas,
   } = req.body;
 
@@ -29,6 +30,7 @@ const crearPresupuesto = async (req, res) => {
       Precio,
       IVA,
       PrecioFinal,
+      Status,
       Puertas,
     });
 
