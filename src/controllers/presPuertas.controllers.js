@@ -66,28 +66,16 @@ const obtenerPresupuestos = async (req, res) => {
 
 const DeletePres = async (req, res) => {
   try {
-    const clientId = req.params.clientId;
     const presupuestoId = req.params.presupuestoId;
 
-    const client = await Clientes.findOne({ _id: clientId });
+    const presupuesto = await PresupuestoPuerta.findById(presupuestoId);
 
-    if (!client) {
-      console.log("Cliente no encontrado");
-      return res.status(404).json({ message: "Cliente no encontrado" });
-    }
-
-    const presupuestoIndex = client.Presupuestos.findIndex(
-      (presupuesto) => presupuesto._id.toString() === presupuestoId
-    );
-
-    if (presupuestoIndex === -1) {
+    if (!presupuesto) {
       console.log("Presupuesto no encontrado");
       return res.status(404).json({ message: "Presupuesto no encontrado" });
     }
 
-    client.Presupuestos.splice(presupuestoIndex, 1);
-
-    await client.save();
+    await PresupuestoPuerta.findByIdAndDelete(presupuestoId);
 
     return res
       .status(200)
@@ -100,38 +88,23 @@ const DeletePres = async (req, res) => {
 
 const EditPresupuesto = async (req, res) => {
   try {
-    const clientId = req.params.clientId;
     const presupuestoId = req.params.presupuestoId;
     const updatedPresData = req.body;
-    const estadoPres = updatedPresData.Estado;
 
-    const client = await Clientes.findById(clientId);
-
-    if (!client) {
-      return res.status(404).json({ error: "Cliente no encontrado" });
-    }
-
-    const presupuesto = client.Presupuestos.find(
-      (presupuesto) => presupuesto._id.toString() === presupuestoId
-    );
+    const presupuesto = await PresupuestoPuerta.findById(presupuestoId);
 
     if (!presupuesto) {
       console.log("Presupuesto no encontrado");
       return res.status(404).json({ message: "Presupuesto no encontrado" });
     }
 
-    const index = client.Presupuestos.findIndex(
-      (p) => p._id.toString() === presupuestoId
+    const updatedPresupuesto = await PresupuestoPuerta.findByIdAndUpdate(
+      presupuestoId,
+      updatedPresData,
+      { new: true }
     );
 
-    const presupuestoClone = { ...presupuesto };
-    presupuestoClone.Estado = estadoPres;
-
-    client.Presupuestos[index] = presupuestoClone;
-
-    await client.save();
-
-    res.json(presupuesto);
+    res.json(updatedPresupuesto);
   } catch (error) {
     console.error("Error al editar el presupuesto:", error);
     res.status(500).json({ error: "Error al editar el presupuesto" });
