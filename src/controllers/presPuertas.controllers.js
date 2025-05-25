@@ -47,7 +47,7 @@ const crearPresupuesto = async (req, res) => {
 
 const obtenerPresupuestos = async (req, res) => {
   try {
-    const presupuestos = await PresupuestoPuerta.find();
+    const presupuestos = await PresupuestoPuertas.find();
 
     if (!presupuestos) {
       return res
@@ -66,14 +66,14 @@ const DeletePres = async (req, res) => {
   try {
     const presupuestoId = req.params.presupuestoId;
 
-    const presupuesto = await PresupuestoPuerta.findById(presupuestoId);
+    const presupuesto = await PresupuestoPuertas.findById(presupuestoId);
 
     if (!presupuesto) {
       console.log("Presupuesto no encontrado");
       return res.status(404).json({ message: "Presupuesto no encontrado" });
     }
 
-    await PresupuestoPuerta.findByIdAndDelete(presupuestoId);
+    await PresupuestoPuertas.findByIdAndDelete(presupuestoId);
 
     return res
       .status(200)
@@ -89,14 +89,14 @@ const EditPresupuesto = async (req, res) => {
     const presupuestoId = req.params.presupuestoId;
     const updatedPresData = req.body;
 
-    const presupuesto = await PresupuestoPuerta.findById(presupuestoId);
+    const presupuesto = await PresupuestoPuertas.findById(presupuestoId);
 
     if (!presupuesto) {
       console.log("Presupuesto no encontrado");
       return res.status(404).json({ message: "Presupuesto no encontrado" });
     }
 
-    const updatedPresupuesto = await PresupuestoPuerta.findByIdAndUpdate(
+    const updatedPresupuesto = await PresupuestoPuertas.findByIdAndUpdate(
       presupuestoId,
       updatedPresData,
       { new: true }
