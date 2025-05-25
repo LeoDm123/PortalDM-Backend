@@ -25,6 +25,10 @@ const presPuertaSchema = Schema({
   PrecioFinal: {
     type: Number,
   },
+
+  Status: {
+    type: String,
+  },
   Puertas: [
     {
       Nombre: String,
