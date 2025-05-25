@@ -47,6 +47,23 @@ const crearPresupuesto = async (req, res) => {
   }
 };
 
+const obtenerPresupuestos = async (req, res) => {
+  try {
+    const presupuestos = await PresupuestoPuerta.find();
+
+    if (!presupuestos) {
+      return res
+        .status(404)
+        .json({ message: "No se encontró información de presupuestos" });
+    }
+
+    return res.status(200).json(presupuestos);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 const DeletePres = async (req, res) => {
   try {
     const clientId = req.params.clientId;
@@ -123,6 +140,7 @@ const EditPresupuesto = async (req, res) => {
 
 module.exports = {
   crearPresupuesto,
+  obtenerPresupuestos,
   DeletePres,
   EditPresupuesto,
 };
