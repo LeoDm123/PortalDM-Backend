@@ -19,6 +19,9 @@ const presPuertaSchema = Schema({
   Precio: {
     type: Number,
   },
+  CondFacturacion: {
+    type: Number,
+  },
   IVA: {
     type: Number,
   },
