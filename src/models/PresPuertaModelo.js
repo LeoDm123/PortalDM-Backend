@@ -42,6 +42,7 @@ const presPuertaSchema = Schema({
       Marco: String,
       Hoja: String,
       Terminacion: String,
+      Apliques: String,
       Vidrio: {
         Tipo: String,
         Ancho: Number,
