@@ -49,6 +49,12 @@ const presPuertaSchema = Schema({
         Alto: Number,
         Cantidad: Number,
       },
+      PañoFijo: {
+        Posicion: String,
+        Ancho: Number,
+        Alto: Number,
+        Vidrio: String,
+      },
       MarcoEnvolvente: Boolean,
       SinTerminacion: Boolean,
       SinColocacion: Boolean,
