@@ -24,7 +24,7 @@ app.use("/pedidoVarios", require("./src/routes/pedidoVarios"));
 app.use("/mats", require("./src/routes/mats"));
 app.use("/inv", require("./src/routes/inv"));
 app.use("/settings", require("./src/routes/settings"));
-app.use("/presPuertasSettings", require("./src/routes/presPuertasSettings"));
+app.use("/costos", require("./src/routes/costos"));
 
 app.listen(process.env.PORT, () => {
   console.log(`Servidor corriendo en el puerto ${process.env.PORT}`);
