@@ -41,6 +41,7 @@ const presPuertaSchema = Schema({
       PrecioUnit: Number,
       Marco: String,
       Hoja: String,
+      Placa: String,
       Terminacion: String,
       Apliques: String,
       Vidrio: {
