@@ -22,8 +22,6 @@ const CostosSchema = Schema({
     {
       Detalle: String,
       ValorCalculo: Number,
-      LimiteSup: Number,
-      LimiteInf: Number,
     },
   ],
   ManoObra: [
