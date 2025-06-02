@@ -41,16 +41,14 @@ const CostosSchema = Schema({
       Cobro: String,
     },
   ],
-  Margenes: [
-    {
-      Marco: Number,
-      Hoja: Number,
-      Lustre: Number,
-      Vidrio: Number,
-      Colocacion: Number,
-      Desperdicio: Number,
-    },
-  ],
+  Margenes: {
+    Marco: Number,
+    Hoja: Number,
+    Lustre: Number,
+    Vidrio: Number,
+    Colocacion: Number,
+    Desperdicio: Number,
+  },
 });
 
 module.exports = model("Costos", CostosSchema);
