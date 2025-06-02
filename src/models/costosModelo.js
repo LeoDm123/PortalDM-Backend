@@ -11,7 +11,10 @@ const CostosSchema = Schema({
       Espesor: Number,
       Volumen: Number,
       Unidades: Number,
-      Consumo: [{ valor: Number, unidad: String }],
+      Consumo: {
+        valor: Number,
+        unidad: String,
+      },
       Categoria: String,
     },
   ],
