@@ -24,14 +24,10 @@ const CostosSchema = Schema({
       ValorCalculo: Number,
     },
   ],
-  ManoObra: [
-    {
-      Costo: Number,
-      Mes: Number,
-      Año: Number,
-      Aumento: Number,
-    },
-  ],
+  ManoObra: {
+    Costo: Number,
+    Fecha: Date,
+  },
   CostosFijos: [
     {
       Detalle: String,
