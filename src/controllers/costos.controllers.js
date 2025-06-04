@@ -40,20 +40,22 @@ const getCostoById = async (req, res) => {
   }
 };
 
-// Crear un nuevo costo
+// Crear o reemplazar el único costo
 const crearCosto = async (req, res) => {
   try {
-    const nuevoCosto = new Costos(req.body);
-    const costoGuardado = await nuevoCosto.save();
+    const costoActualizado = await Costos.findOneAndUpdate({}, req.body, {
+      new: true,
+      upsert: true,
+    });
     res.status(201).json({
       ok: true,
-      msg: "Costo creado exitosamente",
-      costo: costoGuardado,
+      msg: "Costo actualizado o creado exitosamente",
+      costo: costoActualizado,
     });
   } catch (error) {
     res.status(500).json({
       ok: false,
-      msg: "Error al crear el costo",
+      msg: "Error al crear o actualizar el costo",
       error: error.message,
     });
   }
