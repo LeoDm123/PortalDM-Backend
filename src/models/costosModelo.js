@@ -26,7 +26,7 @@ const CostosSchema = Schema({
   ],
   ManoObra: {
     Costo: Number,
-    Fecha: Date,
+    Fecha: String,
   },
   CostosFijos: [
     {
