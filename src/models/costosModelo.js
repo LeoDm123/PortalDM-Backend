@@ -43,6 +43,11 @@ const CostosSchema = Schema({
     Colocacion: Number,
     Desperdicio: Number,
   },
+  Vidrios: {
+    Tipo: String,
+    Costo: Number,
+    Unidad: "m2",
+  },
 });
 
 module.exports = model("Costos", CostosSchema);
