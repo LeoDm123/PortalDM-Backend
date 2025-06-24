@@ -46,7 +46,7 @@ const CostosSchema = Schema({
   Vidrios: {
     Tipo: String,
     Costo: Number,
-    Unidad: "m2",
+    Unidad: String,
   },
 });
 
