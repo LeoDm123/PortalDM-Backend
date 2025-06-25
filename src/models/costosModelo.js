@@ -44,7 +44,8 @@ const CostosSchema = Schema({
     Desperdicio: Number,
   },
   Vidrios: {
-    Tipo: String,
+    Codigo: String,
+    Detalle: String,
     Costo: Number,
     Unidad: String,
   },
