@@ -58,7 +58,7 @@ const presPuertaSchema = Schema({
           Vidrio: String,
         },
       ],
-      MarcoEnvolvente: Boolean,
+      Corrediza: Boolean,
       SinTerminacion: Boolean,
       SinColocacion: Boolean,
       PuertaPrincipal: Boolean,
