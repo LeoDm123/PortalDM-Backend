@@ -42,6 +42,7 @@ const CostosSchema = Schema({
     Vidrio: Number,
     Colocacion: Number,
     Desperdicio: Number,
+    PtaPpal: Number,
   },
   Vidrios: {
     Codigo: String,
