@@ -3,24 +3,11 @@ const { dbConnection } = require("./src/database/config");
 const app = express();
 const cors = require("cors");
 
-const allowedOrigins = [process.env.DEV_DOM, process.env.API_FRONT];
-
 require("dotenv").config();
 
 app.use(express.json());
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-  })
-);
+app.use(cors());
 
 dbConnection();
 
