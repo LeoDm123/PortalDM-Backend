@@ -3,7 +3,7 @@ const { dbConnection } = require("./src/database/config");
 const app = express();
 const cors = require("cors");
 
-const allowedOrigins = [process.env.DEV_DOM, process.env.BACK_API];
+const allowedOrigins = [process.env.DEV_DOM, process.env.API_FRONT];
 
 require("dotenv").config();
 
