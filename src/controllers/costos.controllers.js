@@ -63,7 +63,7 @@ const crearCosto = async (req, res) => {
 
 // Actualizar un costo
 const actualizarCosto = async (req, res) => {
-  const { arrayName, elementId } = req.params;
+  const { array, id } = req.params;
   const updateData = req.body;
 
   const allowedArrays = [
@@ -74,18 +74,18 @@ const actualizarCosto = async (req, res) => {
     "Margenes",
     "Vidrios",
   ];
-  if (!allowedArrays.includes(arrayName)) {
+  if (!allowedArrays.includes(array)) {
     return res.status(400).json({ ok: false, msg: "Array inválido" });
   }
 
   const setObj = {};
   for (const key in updateData) {
-    setObj[`${arrayName}.$.${key}`] = updateData[key];
+    setObj[`${array}.$.${key}`] = updateData[key];
   }
 
   try {
     const docActualizado = await Costos.findOneAndUpdate(
-      { [`${arrayName}._id`]: elementId },
+      { [`${array}._id`]: id },
       { $set: setObj },
       { new: true }
     );
@@ -96,7 +96,7 @@ const actualizarCosto = async (req, res) => {
 
     return res.status(200).json({
       ok: true,
-      msg: `Elemento de ${arrayName} actualizado correctamente`,
+      msg: `Elemento de ${array} actualizado correctamente`,
       data: docActualizado,
     });
   } catch (error) {
