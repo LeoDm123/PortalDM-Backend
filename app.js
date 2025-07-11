@@ -5,9 +5,20 @@ const cors = require("cors");
 
 require("dotenv").config();
 
+const corsOptions = {
+  origin: [
+    "http://localhost:5173",
+    "https://portaldm.com.ar",
+    "https://portaldm-api.onrender.com",
+  ],
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
 app.use(express.json());
 
-app.use(cors());
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 dbConnection();
 
