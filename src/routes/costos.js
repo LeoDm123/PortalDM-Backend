@@ -13,7 +13,7 @@ const routerCostos = express.Router();
 routerCostos.get("/getCostos", getCostos);
 routerCostos.get("/getCostoById/:id", getCostoById);
 routerCostos.post("/crearCosto", crearCosto);
-routerCostos.put("/actualizarCosto/:id", actualizarCosto);
+routerCostos.put("/actualizarCosto/:array/:id", actualizarCosto);
 routerCostos.delete("/eliminarCosto/:id", eliminarCosto);
 
 module.exports = routerCostos;

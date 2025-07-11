@@ -66,7 +66,6 @@ const actualizarCosto = async (req, res) => {
   const { arrayName, elementId } = req.params;
   const updateData = req.body;
 
-  // Definir arrays permitidos (para seguridad)
   const allowedArrays = [
     "Materiales",
     "Parametros",
