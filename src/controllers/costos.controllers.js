@@ -63,6 +63,7 @@ const crearCosto = async (req, res) => {
 
 // Actualizar un costo
 const actualizarCosto = async (req, res) => {
+  console.log("Llega a actualizarCosto", req.params.id, req.body);
   try {
     const costoActualizado = await Costos.findByIdAndUpdate(
       req.params.id,
