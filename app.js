@@ -6,11 +6,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const corsOptions = {
-  origin: [
-    "http://localhost:5173",
-    "https://portaldm.com.ar",
-    "https://portaldm-api.onrender.com",
-  ],
+  origin: ["http://localhost:5173", "https://portal-dm.vercel.app/"],
   credentials: true,
   optionsSuccessStatus: 200,
 };
