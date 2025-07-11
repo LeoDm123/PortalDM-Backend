@@ -63,28 +63,47 @@ const crearCosto = async (req, res) => {
 
 // Actualizar un costo
 const actualizarCosto = async (req, res) => {
-  console.log("Llega a actualizarCosto", req.params.id, req.body);
+  const { arrayName, elementId } = req.params;
+  const updateData = req.body;
+
+  // Definir arrays permitidos (para seguridad)
+  const allowedArrays = [
+    "Materiales",
+    "Parametros",
+    "CostosFijos",
+    "ManoObra",
+    "Margenes",
+    "Vidrios",
+  ];
+  if (!allowedArrays.includes(arrayName)) {
+    return res.status(400).json({ ok: false, msg: "Array inválido" });
+  }
+
+  const setObj = {};
+  for (const key in updateData) {
+    setObj[`${arrayName}.$.${key}`] = updateData[key];
+  }
+
   try {
-    const costoActualizado = await Costos.findByIdAndUpdate(
-      req.params.id,
-      req.body,
+    const docActualizado = await Costos.findOneAndUpdate(
+      { [`${arrayName}._id`]: elementId },
+      { $set: setObj },
       { new: true }
     );
-    if (!costoActualizado) {
-      return res.status(404).json({
-        ok: false,
-        msg: "Costo no encontrado",
-      });
+
+    if (!docActualizado) {
+      return res.status(404).json({ ok: false, msg: "Elemento no encontrado" });
     }
-    res.status(200).json({
+
+    return res.status(200).json({
       ok: true,
-      msg: "Costo actualizado exitosamente",
-      costo: costoActualizado,
+      msg: `Elemento de ${arrayName} actualizado correctamente`,
+      data: docActualizado,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       ok: false,
-      msg: "Error al actualizar el costo",
+      msg: "Error al actualizar elemento",
       error: error.message,
     });
   }
