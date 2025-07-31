@@ -44,12 +44,14 @@ const CostosSchema = Schema({
     Desperdicio: Number,
     PtaPpal: Number,
   },
-  Vidrios: {
-    Codigo: String,
-    Detalle: String,
-    Costo: Number,
-    Unidad: String,
-  },
+  Vidrios: [
+    {
+      Codigo: String,
+      Detalle: String,
+      Costo: Number,
+      Unidad: String,
+    },
+  ],
 });
 
 module.exports = model("Costos", CostosSchema);

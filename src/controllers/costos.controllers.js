@@ -78,30 +78,17 @@ const actualizarCosto = async (req, res) => {
     return res.status(400).json({ ok: false, msg: "Array inválido" });
   }
 
+  const setObj = {};
+  for (const key in updateData) {
+    setObj[`${array}.$.${key}`] = updateData[key];
+  }
+
   try {
-    let docActualizado;
-
-    // Casos especiales: ManoObra y Margenes son objetos, no arrays
-    if (array === "ManoObra" || array === "Margenes") {
-      // Para estos casos, actualizamos el objeto completo
-      docActualizado = await Costos.findOneAndUpdate(
-        {}, // Buscar el primer documento (debería ser único)
-        { $set: { [array]: updateData } },
-        { new: true }
-      );
-    } else {
-      // Para arrays (Materiales, Parametros, CostosFijos, Vidrios)
-      const setObj = {};
-      for (const key in updateData) {
-        setObj[`${array}.$.${key}`] = updateData[key];
-      }
-
-      docActualizado = await Costos.findOneAndUpdate(
-        { [`${array}._id`]: id },
-        { $set: setObj },
-        { new: true }
-      );
-    }
+    const docActualizado = await Costos.findOneAndUpdate(
+      { [`${array}._id`]: id },
+      { $set: setObj },
+      { new: true }
+    );
 
     if (!docActualizado) {
       return res.status(404).json({ ok: false, msg: "Elemento no encontrado" });
@@ -116,6 +103,42 @@ const actualizarCosto = async (req, res) => {
     return res.status(500).json({
       ok: false,
       msg: "Error al actualizar elemento",
+      error: error.message,
+    });
+  }
+};
+
+// Actualizar ManoObra o Margenes (que son objetos, no arrays)
+const actualizarObjetoCosto = async (req, res) => {
+  const { campo } = req.params; // 'ManoObra' o 'Margenes'
+  const updateData = req.body;
+
+  if (!["ManoObra", "Margenes"].includes(campo)) {
+    return res.status(400).json({ ok: false, msg: "Campo inválido" });
+  }
+
+  try {
+    const docActualizado = await Costos.findOneAndUpdate(
+      {},
+      { $set: { [campo]: updateData } },
+      { new: true }
+    );
+
+    if (!docActualizado) {
+      return res
+        .status(404)
+        .json({ ok: false, msg: "Documento de costos no encontrado" });
+    }
+
+    return res.status(200).json({
+      ok: true,
+      msg: `${campo} actualizado correctamente`,
+      data: docActualizado,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      msg: "Error al actualizar el campo",
       error: error.message,
     });
   }
@@ -150,5 +173,6 @@ module.exports = {
   getCostoById,
   crearCosto,
   actualizarCosto,
+  actualizarObjetoCosto,
   eliminarCosto,
 };
