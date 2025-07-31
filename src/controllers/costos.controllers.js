@@ -78,17 +78,30 @@ const actualizarCosto = async (req, res) => {
     return res.status(400).json({ ok: false, msg: "Array inválido" });
   }
 
-  const setObj = {};
-  for (const key in updateData) {
-    setObj[`${array}.$.${key}`] = updateData[key];
-  }
-
   try {
-    const docActualizado = await Costos.findOneAndUpdate(
-      { [`${array}._id`]: id },
-      { $set: setObj },
-      { new: true }
-    );
+    let docActualizado;
+
+    // Casos especiales: ManoObra y Margenes son objetos, no arrays
+    if (array === "ManoObra" || array === "Margenes") {
+      // Para estos casos, actualizamos el objeto completo
+      docActualizado = await Costos.findOneAndUpdate(
+        {}, // Buscar el primer documento (debería ser único)
+        { $set: { [array]: updateData } },
+        { new: true }
+      );
+    } else {
+      // Para arrays (Materiales, Parametros, CostosFijos, Vidrios)
+      const setObj = {};
+      for (const key in updateData) {
+        setObj[`${array}.$.${key}`] = updateData[key];
+      }
+
+      docActualizado = await Costos.findOneAndUpdate(
+        { [`${array}._id`]: id },
+        { $set: setObj },
+        { new: true }
+      );
+    }
 
     if (!docActualizado) {
       return res.status(404).json({ ok: false, msg: "Elemento no encontrado" });
